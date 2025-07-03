@@ -1,0 +1,211 @@
+/* إعادة ضبط التنسيقات الافتراضية */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* تنسيق الخلفية العامة للصفحة */
+body {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* تنسيق الحاوية الرئيسية */
+#game-container {
+    max-width: 1200px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin: 20px auto;
+}
+
+/* تنسيق العناوين */
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+h3 {
+    font-size: 1.5em;
+    margin: 20px 0 10px;
+    color: #f0e68c;
+}
+
+/* تنسيق الأقسام */
+#village-name, #village-image, #resources, #population, #village-power,
+#buildings, #soldiers, #reserve-weapons, #defenses, #strategies,
+#boosters, #elixir-converter, #attack, #codes, #chat, #skins, #governorate, #quests {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* تنسيق النصوص */
+p {
+    font-size: 1.1em;
+    margin: 10px 0;
+    color: #e0e0e0;
+}
+
+/* تنسيق الأزرار */
+button {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+    background: linear-gradient(45deg, #ff8e53, #ff6b6b);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* تنسيق حقول الإدخال */
+input, textarea {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 1em;
+    transition: box-shadow 0.3s;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+}
+
+/* تنسيق الكانفس */
+#farm-canvas, #battle-canvas {
+    border: 2px solid #ffd700;
+    border-radius: 5px;
+    background: rgba(0, 128, 0, 0.2);
+    margin: 10px 0;
+}
+
+#battle-canvas {
+    background: rgba(50, 50, 50, 0.3);
+}
+
+/* تنسيق صورة الدولة */
+#village-image-display {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+}
+
+/* تنسيق قسم المحادثة */
+#chat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#chat textarea, #chat input {
+    max-width: 400px;
+}
+
+#chat-code-display, #chat-message-display {
+    min-height: 60px;
+    resize: vertical;
+}
+
+/* تنسيق قسم المهمات */
+#quests .quest {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#quests .quest p {
+    margin: 0;
+}
+
+#quests .quest button {
+    background: linear-gradient(45deg, #28a745, #34c759);
+}
+
+#quests .quest button:hover {
+    background: linear-gradient(45deg, #34c759, #28a745);
+}
+
+/* تنسيق النصوص داخل العناصر */
+span {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+/* تنسيق الأقسام لتكون متجاوبة */
+@media (max-width: 768px) {
+    #game-container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    input, textarea {
+        max-width: 100%;
+    }
+
+    #battle-canvas {
+        width: 100%;
+        height: 150px;
+    }
+}
+
+/* تأثير التحميل الأولي للأقسام */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#game-container > div {
+    animation: fadeIn 0.5s ease-in-out;
+}

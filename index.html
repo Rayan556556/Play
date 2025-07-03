@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>لعبة بناء الدولة</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/eruda@3.0.0/eruda.js"></script>
+    <script>
+        window.onload = function () {
+            eruda.init();
+        };
+    </script>
+</head>
+<body>
+    <div id="game-container">
+        <h1>لعبة بناء الدولة</h1>
+
+        <div id="village-name">
+            اسم الدولة: <span id="village-name-display">غير محدد</span>
+            <input id="village-name-input" placeholder="أدخل اسم الدولة" />
+            <button onclick="setVillageName()">تحديد الاسم</button>
+        </div>
+
+        <div id="village-image">
+            <p>صورة المدينة:</p>
+            <input type="file" id="village-image-input" accept="image/*" />
+            <img id="village-image-display" src="" alt="صورة المدينة" style="display: none; max-width: 200px;" />
+        </div>
+
+        <!-- عرض الموارد -->
+        <div id="resources">
+            <p>خشب: <span id="wood">100</span></p>
+            <p>ذهب: <span id="gold">500</span></p>
+            <p>طعام: <span id="food">100</span></p>
+            <p>حديد: <span id="iron">100</span></p>
+            <p>إكسير: <span id="elixir">0</span></p>
+        </div>
+
+        <!-- السكان -->
+        <div id="population">
+            <p>عدد السكان: <span id="population-count">100</span></p>
+            <p>الولادات: <span id="births">0</span>/ثانية</p>
+            <p>الوفيات: <span id="deaths">0</span>/ثانية</p>
+        </div>
+
+        <!-- القوة الهجومية والدفاعية -->
+        <div id="village-power">
+            <p>القوة الهجومية: <span id="army-power">0</span></p>
+            <p>القوة الدفاعية: <span id="defense-power">0</span></p>
+        </div>
+
+        <!-- منطقة الزراعة -->
+        <canvas id="farm-canvas" width="200" height="200"></canvas>
+        <button onclick="plantTree()">زراعة شجرة (10 طعام)</button>
+        <button onclick="cutTree()">قطع شجرة (+50 خشب)</button>
+
+        <!-- المباني -->
+        <div id="buildings">
+            <h3>المباني</h3>
+            <button onclick="build('farm')">بناء مزرعة (100 خشب)</button>
+            <button onclick="build('mine')">بناء منجم (150 ذهب)</button>
+            <button onclick="build('barracks')">بناء ثكنة (200 حديد)</button>
+            <button onclick="build('hospital')">بناء مستشفى (300 ذهب)</button>
+            <button onclick="build('gym')">بناء نادي رياضي (200 ذهب)</button>
+            <button onclick="build('ryan')">تطوير مبنى ريان (500 ذهب)</button>
+        </div>
+
+        <!-- الجنود -->
+        <div id="soldiers">
+            <h3>الجنود</h3>
+            <button onclick="trainSoldier('archer')">تدريب رامي سهام (50 طعام، 10 ثوانٍ)</button>
+            <button onclick="trainSoldier('knight')">تدريب فارس (100 حديد، 20 ثانية)</button>
+            <button onclick="trainSoldier('reserve')">تدريب احتياط (2 طعام، 5 ثوانٍ)</button>
+        </div>
+
+        <!-- تجهيز الاحتياطيات -->
+        <div id="reserve-weapons">
+            <h3>تجهيز الاحتياطيات</h3>
+            <button onclick="equipReserveWeapon('sword')">تجهيز سيف (50 ذهب)</button>
+            <button onclick="equipReserveWeapon('shield')">تجهيز درع (50 ذهب)</button>
+            <button onclick="equipReserveWeapon('bow')">تجهيز قوس (75 ذهب)</button>
+        </div>
+
+        <!-- الدفاعات -->
+        <div id="defenses">
+            <h3>الدفاعات</h3>
+            <button onclick="buildDefense('tower')">بناء برج (200 خشب)</button>
+            <button onclick="buildDefense('wall')">بناء جدار (150 حديد)</button>
+        </div>
+
+        <!-- الاستراتيجيات -->
+        <div id="strategies">
+            <h3>الاستراتيجيات</h3>
+            <button onclick="buyStrategy('attack', 'aggressive')">اختيار استراتيجية هجومية (1000 ذهب)</button>
+            <button onclick="buyStrategy('defense', 'defensive')">اختيار استراتيجية دفاعية (1000 ذهب)</button>
+            <button onclick="buyStrategy('balanced', 'balanced')">اختيار استراتيجية متوازنة (1000 ذهب)</button>
+        </div>
+
+        <!-- المسرعات -->
+        <div id="boosters">
+            <h3>المسرعات</h3>
+            <button onclick="buyBooster()">شراء مسرع إنتاج (<span id="booster-cost">500</span> ذهب)</button>
+            <p>مستوى المسرع: <span id="booster-level">0</span></p>
+        </div>
+
+        <!-- تحويل الإكسير -->
+        <div id="elixir-converter">
+            <h3>تحويل الإكسير</h3>
+            <button onclick="convertElixirToGold()">تحويل 1 إكسير إلى 100 ذهب</button>
+            <button onclick="convertGoldToElixir()">تحويل 100 ذهب إلى 1 إكسير</button>
+        </div>
+
+        <!-- الهجوم -->
+        <div id="attack">
+            <h3>الهجوم</h3>
+            <p>اختر قدرة هجومية:</p>
+            <button onclick="selectAttackAbility('storm')">العاصفة (200 ذهب، 2 إكسير)</button>
+            <button onclick="selectAttackAbility('fireArrow')">السهم الناري (150 ذهب، 1 إكسير)</button>
+            <button onclick="attackVillage()">هجوم (100 جندي)</button>
+            <canvas id="battle-canvas" width="400" height="200"></canvas>
+        </div>
+
+        <!-- إدارة الأكواد -->
+        <div id="codes">
+            <h3>إدارة الأكواد</h3>
+            <button onclick="generateVillageCode()">إنشاء كود الدولة</button>
+            <p>كود الدولة:</p>
+            <textarea id="village-code-display" readonly></textarea>
+            <button onclick="copyVillageCode()">نسخ الكود</button>
+            <input id="village-code-input" placeholder="أدخل كود الدولة" />
+            <button onclick="loadVillage()">تحميل الدولة</button>
+            <input id="resource-code-input" placeholder="أدخل كود الموارد" />
+            <button onclick="useResourceCode()">استخدام كود الموارد</button>
+            <input id="battle-code-input" placeholder="أدخل كود المعركة" />
+            <button onclick="useBattleCode()">استخدام كود المعركة</button>
+        </div>
+
+        <!-- المحادثة -->
+        <div id="chat">
+            <h3>المحادثة</h3>
+            <p>إدخال الرسالة:</p>
+            <textarea id="chat-input" placeholder="أدخل رسالتك هنا"></textarea>
+            <button onclick="encodeMessage()">تحويل الرسالة إلى كود</button>
+            <p>كود الرسالة:</p>
+            <textarea id="chat-code-display" readonly></textarea>
+            <p>إدخال كود الرسالة:</p>
+            <input id="chat-code-input" placeholder="أدخل كود الرسالة" />
+            <button onclick="decodeMessage()">تفسير الكود إلى رسالة</button>
+            <p>الرسالة المفسرة:</p>
+            <textarea id="chat-message-display" readonly></textarea>
+        </div>
+
+        <!-- السكنات -->
+        <div id="skins">
+            <h3>السكنات</h3>
+            <button onclick="buySkin('blue')">تغيير الخلفية إلى أزرق (100 ذهب)</button>
+            <button onclick="buySkin('black')">تغيير الخلفية إلى أسود (100 ذهب)</button>
+            <button onclick="buySkin('premium')">سكن مميز (5000 ذهب)</button>
+        </div>
+
+        <!-- المحافظة -->
+        <div id="governorate">
+            <h3>المحافظة</h3>
+            <button onclick="buyGovernorate()">شراء محافظة (100000 مورد)</button>
+        </div>
+
+        <!-- المهمات -->
+        <div id="quests">
+            <h3>المهمات</h3>
+            <div id="quest-list"></div>
+            <button onclick="generateNewQuest()">إنشاء مهمة جديدة</button>
+        </div>
+    </div>
+
+    <script defer src="script.js"></script>
+</body>
+</html>
